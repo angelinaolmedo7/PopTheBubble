@@ -81,7 +81,13 @@ class GameScene: SKScene {
             //1. The squares y position should increase by 10
             //2. Create an if statement that checks if the squares y position is >= to the screens height
             //If it is remove the square and create a new square with the same name
-            square.setValue(square.position.y + 10, forKey: "position.y")
+            
+            //Your line below will cause a crash in the game since there is no key "position.y" for a node
+            //square.setValue(square.position.y + 10, forKey: "position.y")
+
+            //This line will do the trick
+            square.position.y += 10
+
             if square.position.y >= self.view!.bounds.height {
                 self.createSquares(name: square.name!)
                 square.run(SKAction.removeFromParent())
@@ -90,6 +96,9 @@ class GameScene: SKScene {
         
         //TODO: Have the square run the above animation forever and add the square to the SKScene!
         square.run(SKAction.repeatForever(action))
+
+        //Nothing will show unless you add the squares as child to the scene
+        addChild(square)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -111,6 +120,10 @@ class GameScene: SKScene {
                 square?.removeFromParent()
                 score += 1
                 createSquares(name: name!)
+
+                // We can't see how many points we have if we don't update the label
+                scoreLabel.text = "\(score)"
+
             }
         }
     }
